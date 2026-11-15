@@ -1,18 +1,21 @@
-name: Build Doker Image
+name: Build Docker Image
+
 on:
   push:
-      branch: [main]
+    branches: [ main ]
 
 jobs:
-   build:
-   runs-on: ubuntu-latest
-   steps:
-    -name: Checkout code
-     uses: actions/checkout@v4
-    -name: Build Docker image
-    run: docker build -t my-web:${{github.sha}} ./docker-demo
-    -name: Test container
-    run: |
-    docker run -d -p 8080 --name test-web my-web:${{ github.sha}}
-    sleep 3
-    curl -f http://localhost:8080 | grep "Hello Devops"
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Build Docker image
+        run: docker build -t my-web:${{ github.sha }} ./docker-demo
+
+      - name: Test container
+        run: |
+          docker run -d -p 8080:80 --name test-web my-web:${{ github.sha }}
+          sleep 3
+          curl -f http://localhost:8080 | grep "Hello DevOps"
